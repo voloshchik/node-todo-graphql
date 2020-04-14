@@ -17,7 +17,9 @@ app.use((req, res, next) => {
 async function start() {
   try {
     await sequelize.sync()
-    app.listen(PORT)
+    app.listen(PORT,()=>{
+      console.log('server has been run...')
+    })
   } catch (e) {
     console.log(e)
   }
