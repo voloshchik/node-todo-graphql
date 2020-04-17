@@ -1,5 +1,4 @@
-
-const Todo=require('../models/todo')
+const Todo = require("../models/todo");
 const users = [
   { name: "Igor", age: 30, email: "igor@gmail.ru" },
   { name: "Elena", age: 23, email: "elena@gmail.ru" },
@@ -20,43 +19,54 @@ module.exports = {
     }
     return arr;
   },
-  addTestUser({user: {name, email}}) {
+  addTestUser({ user: { name, email } }) {
     const user = {
-      name, email,
-      age: Math.ceil(Math.random() * 30)
-    }
-    users.push(user)
-    return user
+      name,
+      email,
+      age: Math.ceil(Math.random() * 30),
+    };
+    users.push(user);
+    return user;
   },
- 
+
   async getTodos() {
     try {
-      return await Todo.findAll()
+      return await Todo.findAll();
     } catch (e) {
-      throw new Error('Fetch todos is not available')
+      throw new Error("Fetch todos is not available");
     }
   },
-  async createTodo({todo}) {
+  async createTodo({ todo }) {
     try {
       return await Todo.create({
         title: todo.title,
-        done: false
-      })
+        done: false,
+      });
     } catch (e) {
-      throw new Error('Title is required')
+      throw new Error("Title is required");
     }
   },
 
-async completeTodo({id}){
-try {
-  const todo=await Todo.findByPk(id)
-  todo.done=true
-  await todo.save()
-  return todo
-} catch (err) {
-  throw  new Error('Id is required')
-}
-
-}
-
+  async completeTodo({ id }) {
+    try {
+      const todo = await Todo.findByPk(id);
+      todo.done = true;
+      await todo.save();
+      return todo;
+    } catch (err) {
+      throw new Error("Id is required");
+    }
+  },
+  async deleteTodo({ id }) {
+    try {
+      const todos = await Todo.findAll({
+        where: { id },
+      });
+      await todos[0].destroy();
+      return true;
+    } catch (error) {
+      throw new Error("Id is required");
+      return false;
+    }
+  },
 };

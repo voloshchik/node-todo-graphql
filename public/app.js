@@ -60,8 +60,21 @@ new Vue({
         .catch((e) => console.log(e));
     },
     removeTodo(id) {
-      fetch("/api/todo/" + id, {
-        method: "delete",
+      const query = `
+
+   mutation {
+      deleteTodo(id:"${id}")
+  }
+
+           `;
+
+      fetch("/graphql", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ query }),
       })
         .then(() => {
           this.todos = this.todos.filter((t) => t.id !== id);
@@ -83,12 +96,12 @@ new Vue({
           "Content-Type": "application/json",
           Aceept: "application/json",
         },
-        body: JSON.stringify({ query}),
+        body: JSON.stringify({ query }),
       })
         .then((res) => res.json())
         .then((response) => {
           const idx = this.todos.findIndex((t) => t.id === id);
-          this.todos[idx].updatedAt = response.data.completeTodo.updatedAt
+          this.todos[idx].updatedAt = response.data.completeTodo.updatedAt;
         })
         .catch((e) => console.log(e));
     },
